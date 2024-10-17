@@ -6,11 +6,6 @@ import requests
 from src.headhunter_api import HeadHunterAPI
 
 
-@pytest.fixture
-def api():
-    return HeadHunterAPI()
-
-
 @patch("requests.get")
 def test_fetch_data_success(mock_get, api):
 
@@ -25,8 +20,7 @@ def test_fetch_data_success(mock_get, api):
 
 
 @patch("requests.get")
-def test_connect_failure_500(mock_get):
-    api = HeadHunterAPI()
+def test_connect_failure_500(mock_get, api):
 
     mock_response = requests.Response()
     mock_response.status_code = 500
@@ -48,12 +42,10 @@ def test_connect_failure_404(mock_get, api):
 
 @patch.object(HeadHunterAPI, "_connect")
 @patch("requests.get")
-def test_fetch_data_with_mocked_connect(mock_get, mock_connect, capsys):
+def test_fetch_data_with_mocked_connect(mock_get, mock_connect, capsys, api):
 
     mock_connect.return_value = None
     mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
-
-    api = HeadHunterAPI()
 
     vacancies = api.fetch_data("Python")
     captured = capsys.readouterr()

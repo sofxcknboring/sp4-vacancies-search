@@ -16,35 +16,27 @@ class HeadHunterAPI(ApiHandler):
     def __init__(self):
         self.__base_url = "https://api.hh.ru/vacancies/"
 
-    def __connect(self) -> bool:
+    def _connect(self) -> requests.Response:
+        """
+            Проверка подключения к API.
+            :return: Объект, который содержит ответ сервера на HTTP-запрос.
+        """
         try:
             response = requests.get(self.__base_url)
             response.raise_for_status()
+            return response
+        except requests.exceptions.RequestException as e:
+            raise Exception(f'Ошибка подключения к API: {str(e)}')
 
-            return True
-
-        except requests.exceptions.RequestException as req_error:
-            print(f'Connection error: {req_error}')
-            return False
-
-
-    def connect(self):
-        """
-        Проверяет соединение с API HeadHunter.
-        Returns:
-            bool: Результат проверки соединения (True или False).
-        """
-        return self.__connect()
-
-
-    def fetch_data(self, query, area='113') -> List:
+    def fetch_data(self, query, area='113') -> List[dict]:
         """
         Получение вакансий по запросу.
         :param query: Ключевое слово.
         :param area: '113' -> Россия
         :return: Список всех вакансий.
         """
-        if self.connect():
+        try:
+            self._connect()
             params = {
                 'text': query,
                 'search_field': 'name',
@@ -53,6 +45,9 @@ class HeadHunterAPI(ApiHandler):
                 'area': area
             }
             response = requests.get(self.__base_url, params=params)
-            return response.json().get('items')
+            response.raise_for_status()
+            return response.json().get('items', [])
+        except requests.exceptions.RequestException as e:
+            print(f'Ошибка получения данных: {str(e)}')
+            return []
 
-        return []

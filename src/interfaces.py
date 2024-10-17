@@ -10,7 +10,7 @@ class ApiHandler(ABC):
     """
 
     @abstractmethod
-    def connect(self):
+    def _connect(self):
         """Метод для подключения к API"""
         pass
 

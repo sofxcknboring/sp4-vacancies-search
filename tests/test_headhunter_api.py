@@ -1,34 +1,30 @@
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, Mock
-from src.headhunter_api import HeadHunterAPI
 import requests
-from requests.exceptions import ConnectionError
+
+from src.headhunter_api import HeadHunterAPI
+
 
 @pytest.fixture
 def api():
     return HeadHunterAPI()
 
 
-
-@patch('requests.get')
+@patch("requests.get")
 def test_fetch_data_success(mock_get, api):
 
     mock_response = requests.Response()
     mock_response.status_code = 200
-    mock_response.json = lambda :{
-        "items": [
-            {"key": "1", "next_key": "123"},
-            {"key": "2", "next_key": "123"}
-        ]
-    }
+    mock_response.json = lambda: {"items": [{"key": "1", "next_key": "123"}, {"key": "2", "next_key": "123"}]}
 
     mock_get.return_value = mock_response
 
-    result = api.fetch_data('I hate tests')
-    assert result[0]['key'] == '1'
+    result = api.fetch_data("I hate tests")
+    assert result[0]["key"] == "1"
 
 
-@patch('requests.get')
+@patch("requests.get")
 def test_connect_failure_500(mock_get):
     api = HeadHunterAPI()
 
@@ -40,7 +36,7 @@ def test_connect_failure_500(mock_get):
         api._connect()
 
 
-@patch('requests.get')
+@patch("requests.get")
 def test_connect_failure_404(mock_get, api):
     mock_response = requests.Response()
     mock_response.status_code = 404
@@ -50,8 +46,8 @@ def test_connect_failure_404(mock_get, api):
         api._connect()
 
 
-@patch.object(HeadHunterAPI, '_connect')
-@patch('requests.get')
+@patch.object(HeadHunterAPI, "_connect")
+@patch("requests.get")
 def test_fetch_data_with_mocked_connect(mock_get, mock_connect, capsys):
 
     mock_connect.return_value = None
@@ -59,7 +55,7 @@ def test_fetch_data_with_mocked_connect(mock_get, mock_connect, capsys):
 
     api = HeadHunterAPI()
 
-    vacancies = api.fetch_data('Python')
+    vacancies = api.fetch_data("Python")
     captured = capsys.readouterr()
 
     assert vacancies == []

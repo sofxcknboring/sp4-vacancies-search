@@ -25,7 +25,7 @@ class ApiHandler(ABC):
         pass
 
 
-class FileHandler(ABC):
+class DataConnector(ABC):
     """
     Абстрактный класс для обработки файлов.
     Класс определяет интерфейс для работы с файлами, включая методы

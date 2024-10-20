@@ -12,22 +12,22 @@ def api():
 
 @pytest.fixture
 def vacancy1():
-    return Vacancy("name1", "url1", {"salary": {"from": 1000}}, "requirement1")
+    return Vacancy("name1", "url1", {"from": 1000}, "requirement1")
 
 
 @pytest.fixture
 def vacancy2():
-    return Vacancy("name2", "url2", {"salary": {"from": 2000}}, "requirement2")
+    return Vacancy("name2", "url2", {"from": 2000}, "requirement2")
 
 
 @pytest.fixture
 def vacancy3():
-    return Vacancy("name3", "url3", {"salary": {"from": None, "to": 3000}}, "requirement3")
+    return Vacancy("name3", "url3", {"from": None, "to": 3000}, "requirement3")
 
 
 @pytest.fixture
 def vacancy4():
-    return Vacancy("name4", "url4", {"salary": {"from": 3000}}, "requirement3")
+    return Vacancy("name4", "url4", {"from": 3000}, "<highlighttext>requirement3</highlighttext>")
 
 
 @pytest.fixture

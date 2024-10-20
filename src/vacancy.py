@@ -1,3 +1,4 @@
+import re
 from typing import Dict, List, Optional
 
 
@@ -36,6 +37,9 @@ class Vacancy:
     def requirement(self):
         return self.__requirement
 
+    def __str__(self):
+        return f"{self.name}\n{self.url}\n{self.salary}\n{self.requirement}\n"
+
     # Методы валидации.
     @staticmethod
     def __validate_name(name: str) -> str:
@@ -51,23 +55,24 @@ class Vacancy:
 
     @staticmethod
     def __validate_salary(salary: Optional[Dict]) -> int:
-        if salary is None or not isinstance(salary, dict):
+        if not isinstance(salary, dict):
             return 0
 
-        if "salary" in salary and isinstance(salary["salary"], dict):
-            salary_from = salary["salary"].get("from")
-            salary_to = salary["salary"].get("to")
-
-            if salary_from:
-                return salary_from
+        salary_from = salary.get("from")
+        salary_to = salary.get("to")
+        if salary_from is not None:
+            return salary_from
+        if salary_to is not None:
             return salary_to
+
         return 0
 
     @staticmethod
     def __validate_requirement(requirement: Optional[str]) -> str:
         if not isinstance(requirement, str) or not requirement:
             return "Не определено"
-        return requirement
+        cleaned_requirement = re.sub(r"<highlighttext>(.*?)</highlighttext>", r"\1", requirement)
+        return cleaned_requirement
 
     def __lt__(self, other):
         if not isinstance(other, Vacancy):

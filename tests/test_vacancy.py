@@ -5,14 +5,16 @@ from src.vacancy import Vacancy
 
 def test_init_vacancy(vacancy3):
     assert vacancy3.name == "name3"
+    assert vacancy3.employer == "employer3"
     assert vacancy3.url == "url3"
     assert vacancy3.salary == 3000
     assert vacancy3.requirement == "requirement3"
 
 
 def test_none_vacancy():
-    vacancy_with_none = Vacancy(None, None, None, None)
+    vacancy_with_none = Vacancy(None, None, None, None, None)
     assert vacancy_with_none.name == "Не определено"
+    assert vacancy_with_none.employer == "Не определено"
     assert vacancy_with_none.url == "Не определено"
     assert vacancy_with_none.salary == 0
     assert vacancy_with_none.requirement == "Не определено"

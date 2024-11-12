@@ -50,6 +50,7 @@ class JsonSaver(DataConnector):
 
         vacancy_dict = {
             "name": vacancy.name,
+            "employer": vacancy.employer,
             "url": vacancy.url,
             "salary": vacancy.salary,
             "requirement": vacancy.requirement,
@@ -75,6 +76,7 @@ class JsonSaver(DataConnector):
 
         vacancy_dict = {
             "name": vacancy.name,
+            "employer": vacancy.employer,
             "url": vacancy.url,
             "salary": vacancy.salary,
             "requirement": vacancy.requirement,

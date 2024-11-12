@@ -15,7 +15,7 @@ class Vacancy:
 
     __slots__ = ("__name", "__employer", "__url", "__salary", "__requirement")
 
-    def __init__(self, name: str, employer: str, url: str, salary: Optional[Dict], requirement: str):
+    def __init__(self, name: str, employer: Optional[Dict], url: str, salary: Optional[Dict], requirement: str):
         self.__name = self.__validate_name(name)
         self.__employer = self.__validate_employer(employer)
         self.__url = self.__validate_url(url)
@@ -59,7 +59,7 @@ class Vacancy:
 
     @staticmethod
     def __validate_employer(employer: Optional[Dict]) -> str:
-        if employer is None or not employer['name']:
+        if not isinstance(employer, dict):
             return "Не определено"
         return employer.get("name")
 

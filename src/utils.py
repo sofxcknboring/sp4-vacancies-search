@@ -47,6 +47,12 @@ def instances_to_dicts(vacanices: List["Vacancy"]) -> List[Dict]:
     :return: (List[Dict]) -> Список словарей, представляющих экземпляры.
     """
     return [
-        {"name": instance.name, "url": instance.url, "salary": instance.salary, "requirement": instance.requirement}
+        {
+            "name": instance.name,
+            "employer": instance.employer,
+            "url": instance.url,
+            "salary": instance.salary,
+            "requirement": instance.requirement,
+        }
         for instance in vacanices
     ]

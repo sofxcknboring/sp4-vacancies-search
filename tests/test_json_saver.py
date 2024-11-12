@@ -38,7 +38,9 @@ def test_add_data_new_vacancy(json_saver, vacancy1):
 
 
 def test_delete_data_existing_vacancy(json_saver, vacancy1):
-    mock_data = '[{"name": "name1", "employer": "employer1", "url": "url1", "salary": 1000, "requirement": "requirement1"}]'
+    mock_data = (
+        '[{"name": "name1", "employer": "employer1", "url": "url1", "salary": 1000, "requirement": "requirement1"}]'
+    )
     with patch("builtins.open", mock_open(read_data=mock_data)):
         with patch("json.dump") as mock_dump:
             json_saver.delete_data(vacancy1)

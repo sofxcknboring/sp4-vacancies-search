@@ -8,6 +8,7 @@ class Vacancy:
 
     Атрибуты:
         name (str): Название вакансии.
+        employer (str) Работодатель.
         url (str): URL вакансии.
         salary (int): Зарплата вакансии.
         requirement (str): Требования к вакансии.

@@ -1,6 +1,7 @@
 from typing import List, Tuple
 
 import psycopg2
+
 from src.interfaces import DataConnector
 from src.vacancy import Vacancy
 
@@ -73,6 +74,17 @@ class DBManager(DataConnector):
         self.cursor.execute(create_vacancies_table)
         self.connection.commit()
 
+    def add_employer(self, employer_id: int, name: str):
+        """
+        Добавить работодателя.
+        """
+        query = """
+        INSERT INTO employers (id, name) VALUES (%s, %s)
+        ON CONFLICT (id) DO NOTHING;
+        """
+        self.cursor.execute(query, (employer_id, name))
+        self.connection.commit()
+
     def get_data(self):
         query = """
                 SELECT employers.name, vacancies.*
@@ -83,29 +95,19 @@ class DBManager(DataConnector):
         return self.cursor.fetchall()
 
     def add_data(self, vacancy: Vacancy):
-        check_employer_query = "SELECT id FROM employers WHERE name = %s;"
-        self.cursor.execute(check_employer_query, (vacancy.employer,))
-        employer_id = self.cursor.fetchone()
-
-        if employer_id is None:
-            insert_employer_query = "INSERT INTO employers (name) VALUES (%s) RETURNING id;"
-            self.cursor.execute(insert_employer_query, (vacancy.employer,))
-            employer_id = self.cursor.fetchone()[0]
-        else:
-            employer_id = employer_id[0]
-
         check_vacancy_query = "SELECT id FROM vacancies WHERE url = %s;"
         self.cursor.execute(check_vacancy_query, (vacancy.url,))
         existing_vacancy = self.cursor.fetchone()
 
         if existing_vacancy is not None:
             return
+
         insert_vacancy_query = """
             INSERT INTO vacancies (name, employer_id, url, salary, requirement)
             VALUES (%s, %s, %s, %s, %s);
         """
         self.cursor.execute(
-            insert_vacancy_query, (vacancy.name, employer_id, vacancy.url, vacancy.salary, vacancy.requirement)
+            insert_vacancy_query, (vacancy.name, vacancy.employer, vacancy.url, vacancy.salary, vacancy.requirement)
         )
         self.connection.commit()
 

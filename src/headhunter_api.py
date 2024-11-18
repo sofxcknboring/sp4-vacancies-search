@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import requests
 
@@ -40,6 +40,33 @@ class HeadHunterAPI(ApiHandler):
         try:
             self._connect()
             params = {"text": query, "search_field": "name", "per_page": 100, "page": 0, "area": area}
+            response = requests.get(self.__base_url, params=params)
+            response.raise_for_status()
+            return response.json().get("items", [])
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка получения данных: {str(e)}")
+            return []
+
+    def fetch_employers_data(self, employer_id) -> Optional[str]:
+        """
+        Получить name работодателя по id.
+        """
+        try:
+            self._connect()
+            response = requests.get(f"https://api.hh.ru/employers/{employer_id}")
+            response.raise_for_status()
+            return response.json().get("name")
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка получения данных: {str(e)}")
+            return None
+
+    def fetch_vacancy_by_employer(self, employer_id):
+        """
+        Получить вакансии по параметру employer_id.
+        """
+        try:
+            self._connect()
+            params = {"employer_id": employer_id, "per_page": 100, "page": 0}
             response = requests.get(self.__base_url, params=params)
             response.raise_for_status()
             return response.json().get("items", [])

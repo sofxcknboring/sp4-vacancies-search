@@ -36,4 +36,4 @@ def test_get_vacancies_by_salary_failure(vacancy1):
 
 def test_instance_to_dicts(vacancy1):
     result = instances_to_dicts([vacancy1])
-    assert result == [{"name": "name1", "url": "url1", "salary": 1000, "requirement": "requirement1"}]
+    assert result == [{"name": "name1", "employer": 1, "url": "url1", "salary": 1000, "requirement": "requirement1"}]

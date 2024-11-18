@@ -47,6 +47,36 @@ def instances_to_dicts(vacanices: List["Vacancy"]) -> List[Dict]:
     :return: (List[Dict]) -> Список словарей, представляющих экземпляры.
     """
     return [
-        {"name": instance.name, "url": instance.url, "salary": instance.salary, "requirement": instance.requirement}
+        {
+            "name": instance.name,
+            "employer": instance.employer,
+            "url": instance.url,
+            "salary": instance.salary,
+            "requirement": instance.requirement,
+        }
         for instance in vacanices
     ]
+
+
+def print_vacancies(vacancies) -> None:
+    if not vacancies:
+        print("Нет доступных вакансий.")
+        return
+
+    for employer_name, vacancy_name, salary, url in vacancies:
+        print(f"Компания: {employer_name}")
+        print(f"Вакансия: {vacancy_name}")
+        print(f"Зарплата: {salary} руб.")
+        print(f"Ссылка: {url}")
+        print("-" * 40)
+
+
+def print_employers(employers) -> None:
+    if not employers:
+        print("Нет доступных работодателей")
+        return
+
+    for employer_name, vacanices_count in employers:
+        print(f"Компания: {employer_name}")
+        print(f"Количество вакансий: {vacanices_count}")
+        print("-" * 40)

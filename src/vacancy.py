@@ -8,15 +8,17 @@ class Vacancy:
 
     Атрибуты:
         name (str): Название вакансии.
+        employer (str) Работодатель.
         url (str): URL вакансии.
         salary (int): Зарплата вакансии.
         requirement (str): Требования к вакансии.
     """
 
-    __slots__ = ("__name", "__url", "__salary", "__requirement")
+    __slots__ = ("__name", "__employer", "__url", "__salary", "__requirement")
 
-    def __init__(self, name: str, url: str, salary: Optional[Dict], requirement: str):
+    def __init__(self, name: str, employer: Optional[Dict], url: str, salary: Optional[Dict], requirement: str):
         self.__name = self.__validate_name(name)
+        self.__employer = self.__validate_employer(employer)
         self.__url = self.__validate_url(url)
         self.__salary = self.__validate_salary(salary)
         self.__requirement = self.__validate_requirement(requirement)
@@ -37,8 +39,17 @@ class Vacancy:
     def requirement(self):
         return self.__requirement
 
+    @property
+    def employer(self):
+        return self.__employer
+
     def __str__(self):
-        return f"{self.name}\n{self.url}\n{self.salary}\n{self.requirement}\n"
+        return f"""
+{self.name}
+{self.employer}
+{self.url}
+{self.salary}
+{self.requirement}"""
 
     # Методы валидации.
     @staticmethod
@@ -46,6 +57,12 @@ class Vacancy:
         if not isinstance(name, str) or not name:
             return "Не определено"
         return name
+
+    @staticmethod
+    def __validate_employer(employer: Optional[Dict]) -> str:
+        if not isinstance(employer, dict):
+            return "Не определено"
+        return employer.get("id")
 
     @staticmethod
     def __validate_url(url: str) -> str:
@@ -111,8 +128,9 @@ class Vacancy:
         obj_list = []
         for vacancy in vacancies_list:
             name = vacancy.get("name")
+            employer = vacancy.get("employer")
             url = vacancy.get("alternate_url")
             salary = vacancy.get("salary")
             requirement = vacancy.get("snippet").get("requirement")
-            obj_list.append(Vacancy(name, url, salary, requirement))
+            obj_list.append(Vacancy(name, employer, url, salary, requirement))
         return obj_list

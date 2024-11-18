@@ -62,7 +62,7 @@ class Vacancy:
     def __validate_employer(employer: Optional[Dict]) -> str:
         if not isinstance(employer, dict):
             return "Не определено"
-        return employer.get("name")
+        return employer.get("id")
 
     @staticmethod
     def __validate_url(url: str) -> str:

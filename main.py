@@ -1,39 +1,43 @@
+import os
+
+from dotenv import load_dotenv
+
 from src.data_handlers.db_manager import DBManager
 from src.data_handlers.json_saver import JsonSaver
 from src.headhunter_api import HeadHunterAPI
-from src.utils import get_top_n_vacaninces, print_vacancies, print_employers
+from src.utils import print_employers, print_vacancies
 from src.vacancy import Vacancy
-import os
-from dotenv import load_dotenv
+
 hh_api = HeadHunterAPI()
 
 load_dotenv()
 
 # Получение значений переменных окружения
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
 
 
 json_saver = JsonSaver()
 db_manager = DBManager(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
 
+employer_ids = [80, 1740, 4181, 4219, 1373, 39305, 3388, 15478, 4233, 78638]
+
 
 def main():
     api_con_question = int(input("1. Обратиться к HeadHunter API?\n2. Запросить данные из БД\nВвод:"))
     if api_con_question == 1:
-        search_query = input("Введите поисковый запрос: ")
-        top_n = int(input("Введите количество вакансий для вывода в топ N: "))
-
-        vacanices_objects = Vacancy.cast_to_object_list(hh_api.fetch_data(search_query))
-        top_n_vacancies = get_top_n_vacaninces(vacanices_objects, top_n)
-
-        for vacancy in top_n_vacancies:
-            # uncomment if you want
-            # json_saver.add_data(vacancy)
-            db_manager.add_data(vacancy)
+        print("Пожалуйста, подождите...")
+        for employer_id in employer_ids:
+            name = hh_api.fetch_employers_data(employer_id=employer_id)
+            db_manager.add_employer(employer_id=employer_id, name=name)
+            vacancies_objects = Vacancy.cast_to_object_list(hh_api.fetch_vacancy_by_employer(employer_id=employer_id))
+            for vacancy in vacancies_objects:
+                # uncomment if you want
+                # json_saver.add_data(vacancy)
+                db_manager.add_data(vacancy)
     flag = True
     while flag:
         new_action = int(
@@ -41,7 +45,7 @@ def main():
                 """
 1. Получить список всех компаний.
 2. Получить список всех вакансий.
-3. Средняя зарплата по вакасиям.
+3. Средняя зарплата по вакансиям.
 4. Получить список всех вакансий, у которых зарплата выше средней по всем вакансиям.
 5. Получить вакансии по ключевому слову в названии.
 6. Завершить работу скрипта.

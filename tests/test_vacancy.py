@@ -5,7 +5,7 @@ from src.vacancy import Vacancy
 
 def test_init_vacancy(vacancy3):
     assert vacancy3.name == "name3"
-    assert vacancy3.employer == "employer3"
+    assert vacancy3.employer == 3
     assert vacancy3.url == "url3"
     assert vacancy3.salary == 3000
     assert vacancy3.requirement == "requirement3"
@@ -33,7 +33,7 @@ def test_comparison_with_non_vacancy(vacancy1):
         assert vacancy1 > 1000
 
 
-def test_cast_to_object_list(vacanices):
-    result = Vacancy.cast_to_object_list(vacanices)
+def test_cast_to_object_list(vacancies):
+    result = Vacancy.cast_to_object_list(vacancies)
     for vac in result:
         assert isinstance(vac, Vacancy)

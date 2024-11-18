@@ -38,6 +38,7 @@ def main():
                 # uncomment if you want
                 # json_saver.add_data(vacancy)
                 db_manager.add_data(vacancy)
+    print("Запрос к API выполнен успешно.")
     flag = True
     while flag:
         new_action = int(
